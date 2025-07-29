@@ -1,0 +1,116 @@
+<!-- Add your book -->
+<section class="addBook--section">
+    <div class="container-fluid text-center">
+        <div class="addBook--items row">
+            <div class="addBook--details col-lg-12">
+                <h2>Añade Libros</h2>
+                {% if user.is_authenticated %}
+                <a class="btn btn-outline-success btn-lg" href="{% url 'addBook' user.id %}">Añade Libros</a>
+                {% else %}
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop">
+                    Añadir Libros
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Querido Usuario</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Por favor inicié sesión para poder añadir libros.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <a type="button" class="btn btn-rimary" href="{% url 'login' %}">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+</section>
+
+
+<!-- Features -->
+<section class="feature--section">
+    <div class="container text-center">
+        <div class="feature--items row">
+            <div class="feature--item col-lg-4 col-md-12">
+                <div class="feature--icon">
+                    <img width="64" height="64" src="../../pngs/book.png" alt="book" />
+                </div>
+                <div class="feature--details">
+                    <h4>Libros</h4>
+                </div>
+            </div>
+            <div class="feature--item col-lg-4 col-md-12">
+                <div class="feature--icon">
+                    <img width="64" height="64"
+                        src="../../pngs/external-read-education-and-school-victoruler-solid-victoruler.png"
+                        alt="external-read-education-and-school-victoruler-solid-victoruler" />
+                </div>
+                <div class="feature--details">
+                    <h4>Leer</h4>
+                </div>
+            </div>
+            <div class="feature--item col-lg-4 col-md-12">
+                <div class="feature--icon">
+                    <img width="64" height="64" src="../../pngs/download--v1.png" alt="download--v1" />
+                </div>
+                <div class="feature--details">
+                    <h4>Descargar</h4>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Brand -->
+<section class="brand--section ">
+    <div class=" col-lg-6 col-md-12">
+        <p class="brand--details">Explora un mundo de conocimiento y descubre las infinitas posibilidades
+            del saber.</p>
+        {% if user.is_authenticated %}
+        <a class="btn btn-outline-success btn-lg" href="{% url 'addBook' user.id %}">Añadir Libros</a>
+        {% else %}
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-outline-success btn-lg" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
+            Añadir Libros
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Dear User</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Por favor inicié sesión para poder añadir libros.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <a type="button" class="btn btn-rimary" href="{% url 'login' %}">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+</section>

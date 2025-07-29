@@ -1,0 +1,53 @@
+{% load static %}
+{% load grupos_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Biblioteca Dr. Júlian Padrón</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'VL_app/upper_menus.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- View Book -->
+    <section class="contri--section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 mt-3">
+            <h3 class="text-center mb-3 h1">{{ book.titulo }}</h3>
+            <div class="row">
+              <p class="col-lg-4 card-text text-center">Categoria : {{ book.categoria }}</p>
+              <p class="col-lg-4 card-text text-center">Autor : {{ book.autor }}</p>
+              <p class="col-lg-4 card-text text-center">Paginas : {{ book.paginas }}</p>
+            </div>
+            <a href="{{ book.pdf.url }}" class="btn btn-primary">Ver Libro</a>
+            <hr />
+            <p class="card-text h3">Descripción :</p>
+            <br />
+            <p>{{ book.sinopsis|safe }}</p>
+          </div>
+
+          {% if books.count == 0 %}
+            <h1 class="text-center">No hay libros añadidos</h1>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+  </body>
+</html>

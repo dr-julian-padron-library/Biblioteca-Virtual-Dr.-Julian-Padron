@@ -1,0 +1,307 @@
+/* Variables globales */
+:root {
+  --primColor: #dcdcdc;
+  --secoColor: #555555;
+  --cornerRad: 4px;
+}
+
+/* Navbar */
+.navbar--section {
+  z-index: 10;
+  /* Asegura que esté por encima de otros elementos */
+  position: fixed;
+  /* Fija la barra en la parte superior */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #a3a3a3;
+  /* Color de fondo de la barra */
+}
+
+/* Menú de navegación */
+.nav-menu {
+  position: relative;
+}
+
+.nav-menu summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8px 14px;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primColor);
+  border: 2px solid var(--secoColor);
+  border-radius: var(--cornerRad);
+  color: var(--secoColor);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: transform 200ms ease-in-out 0s;
+  font-size: 16px;
+  line-height: 40px;
+}
+
+.nav-menu summary::before,
+.nav-menu summary::after {
+  position: absolute;
+  top: 53%;
+  left: 52%;
+  transform: translate(-50%, -50%);
+}
+
+.nav-menu summary::before {
+  content: "";
+}
+
+.nav-menu summary::after {
+  content: "\2630";
+  font-size: 23px;
+}
+
+.nav-menu summary:hover {
+  transform: scale(1.1);
+}
+
+.nav-menu summary::marker {
+  font-size: 0;
+}
+
+.nav-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-menu[open] summary::before {
+  content: "X";
+  font-size: 20px;
+}
+
+.nav-menu[open] summary::after {
+  content: "";
+}
+
+.nav-menu[open] .menu {
+  display: flex;
+  animation: menuAnim 0.3s ease forwards;
+  left: 45px;
+  /* Alinear a la derecha */
+  margin-left: 0;
+  top: 0px;
+  /* Distancia desde el botón */
+}
+
+/* Menú desplegable */
+.menu {
+  height: 0;
+  width: fit-content;
+  border-radius: var(--cornerRad);
+  background-color: var(--primColor);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
+  margin-left: 50px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  font-size: 100%;
+  z-index: 1000;
+}
+
+.menu a {
+  padding: 12px 24px;
+  margin: 0 16px;
+  color: var(--secoColor);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  text-align: center;
+  transition: filter 200ms linear 0s;
+
+}
+
+.menu a:nth-of-type(1) {
+  padding-top: 18px;
+}
+
+.menu a:nth-last-of-type(1) {
+  border-bottom: none;
+}
+
+.menu a:hover {
+  filter: brightness(200%);
+}
+
+/* Menú de bibliotecólogo */
+
+/* Ícono de usuario y menú desplegable */
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-menu summary {
+  display: flex !important;
+  cursor: pointer;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  top: -10px;
+  border-radius: 50%;
+  background-color: var(--primColor);
+  border: 2px solid var(--secoColor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+}
+
+.user-icon i {
+  font-size: 24px;
+  color: var(--secoColor);
+}
+
+.user-menu[open] .dropdown-menu {
+  display: block;
+  animation: menuAnimUser 0.3s ease forwards;
+  right: 0px;
+  top: 35px;
+}
+
+.user-menu summary::before,
+.user-menu summary::after {
+  content: none !important;
+  /* Eliminar símbolos de hamburguesa y X */
+}
+
+.dropdown-menu {
+  border-radius: var(--cornerRad);
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: var(--primColor);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
+  font-size: 100%;
+  min-width: 120px;
+}
+
+.dropdown-menu a{
+  margin: 0 16px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  display: block;
+  color: var(--secoColor);
+  text-decoration: none;
+  text-align: center;
+}
+
+.dropdown-menu span{
+  margin: 0 16px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  display: block;
+  color: var(--secoColor);
+  text-decoration: none;
+  text-align: center;
+}
+
+.dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+  filter: brightness(200%);
+}
+
+.user-menu[open] summary::after {
+  animation-name: menuAnim;
+}
+
+
+details::before {
+  color: var(--secoColor);
+  position: absolute;
+  margin-left: 80px;
+  padding: 10px 10px;
+  opacity: 0.4;
+}
+
+details[open]::before {
+  animation: fadeMe 300ms linear forwards;
+}
+
+details {
+  margin: 20px;
+  height: 40px;
+}
+
+.boton-acceso {
+  top: -10px;
+  position: relative;
+  padding: 6px 20px;
+  border: 2px solid var(--secoColor);
+  border-radius: var(--cornerRad);
+  background-color: var(--primColor);
+  color: var(--secoColor);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.boton-acceso:hover {
+  background-color: var(--secoColor);
+  color: var(--primColor);
+  transform: scale(1.05);
+}
+
+.username {
+  padding: 8px 12px;
+  font-weight: bold;
+  color: var(--secoColor);
+  cursor: default; 
+}
+
+/* Animaciones */
+@keyframes menuAnim {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+
+  to {
+    height: max-content;
+    opacity: 1;
+  }
+}
+
+@keyframes menuAnimUser {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeMe {
+  0% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

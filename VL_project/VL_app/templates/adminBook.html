@@ -1,0 +1,199 @@
+{% load static %}
+{% load grupos_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Administración de Material Bibliografico</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'VL_app/admin_elements.css' %}" />
+  </head>
+
+  <body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+      <h1>Administración de Libros</h1>
+
+      <!-- Botón para agregar un nuevo libro -->
+      <button id="btn-agregar-libro" class="boton-seleccion">Agregar Libro</button>
+
+      <!-- Tabla de libros -->
+      <table class="tabla-libros">
+        <tbody>
+          {% for libro in libros %}
+            <tr>
+              <td data-label="Título">{{ libro.titulo }}</td>
+              <td data-label="Autor">{{ libro.autor }}</td>
+              <td data-label="Editorial">{{ libro.editorial }}</td>
+              <td data-label="Tipo">{{ libro.tipo }}</td>
+              <td data-label="ISBN">{{ libro.isbn }}</td>
+              <td data-label="Año de Publicación">{{ libro.anno_publicacion }}</td>
+              <td data-label="Disponibilidad">{{ libro.disponibilidad|yesno:'Disponible,No Disponible' }}</td>
+              <td data-label="Acciones">
+                <button class="boton-editar boton-planilla" onclick="mostrarFormularioEdicion('{{ libro.id }}')" title="Editar"><i class="fas fa-edit"></i></button>
+                <form method="POST" style="display: inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="libro_id" value="{{ libro.id }}" />
+                  <button class="boton-planilla" type="submit" name="eliminar" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Ventana de Error -->
+    {% include 'includes/error_popup.html' %}
+
+    <!-- Formulario de agregar (ventana emergente) -->
+    <div id="formulario-agregar" class="formulario-edicion" style="display: none;">
+      <h2>Agregar Libro</h2>
+      <form method="POST" action="addBook" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="agregar-titulo">Título:</label>
+            <input type="text" id="agregar-titulo" name="titulo" required />
+          </div>
+          <div class="grupo-formulario">
+            <label for="agregar-sinopsis">Sinopsis:</label>
+            <textarea id="agregar-sinopsis" name="sinopsis" required></textarea>
+          </div>
+        </div>
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="agregar-paginas">Páginas:</label>
+            <input type="text" id="agregar-paginas" name="paginas" required />
+          </div>
+          <div class="grupo-formulario">
+            <label for="agregar-pdf">PDF:</label>
+            <input type="file" id="agregar-pdf" name="pdf" />
+          </div>
+        </div>
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="agregar-autor">Autor:</label>
+            <input type="text" id="agregar-autor" name="autor" required />
+          </div>
+          <div class="grupo-formulario">
+            <label for="agregar-editorial">Editorial:</label>
+            <input type="text" id="agregar-editorial" name="editorial" required />
+          </div>
+        </div>
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="agregar-tipo">Tipo:</label>
+            <select id="agregar-tipo" name="tipo" required>
+              <option value="libro">Libro</option>
+              <option value="revista">Revista</option>
+              <option value="referencia">Referencia</option>
+            </select>
+          </div>
+          <div class="grupo-formulario">
+            <label for="agregar-isbn">ISBN:</label>
+            <input type="text" id="agregar-isbn" name="isbn" required />
+          </div>
+        </div>
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="agregar-año-publicacion">Año de Publicación:</label>
+            <input type="date" id="agregar-año-publicacion" name="anno_publicacion" />
+          </div>
+          <div class="grupo-formulario">
+            <label for="agregar-disponibilidad">Disponibilidad:</label>
+            <input type="checkbox" id="agregar-disponibilidad" name="disponibilidad" />
+          </div>
+        </div>
+        <div class="fila-formulario">
+          <button type="submit">Guardar</button>
+          <button type="button" onclick="ocultarFormularioAgregar()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Formulario de edición (ventana emergente) -->
+    <div id="formulario-edicion" class="formulario-edicion" style="display: none;">
+      <h2>Editar Libro</h2>
+      <form id="form-editar-libro" method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" id="editar-id" name="id" />
+
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="editar-titulo">Título:</label>
+            <input type="text" id="editar-titulo" name="titulo" />
+          </div>
+          <div class="grupo-formulario">
+            <label for="editar-sinopsis">Sinopsis:</label>
+            <textarea id="editar-sinopsis" name="sinopsis"></textarea>
+          </div>
+        </div>
+
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="editar-paginas">Páginas:</label>
+            <input type="text" id="editar-paginas" name="paginas" />
+          </div>
+          <div class="grupo-formulario">
+            <label for="editar-pdf">PDF:</label>
+            <input type="file" id="editar-pdf" name="pdf" />
+          </div>
+        </div>
+
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="editar-autor">Autor:</label>
+            <input type="text" id="editar-autor" name="autor" />
+          </div>
+          <div class="grupo-formulario">
+            <label for="editar-editorial">Editorial:</label>
+            <input type="text" id="editar-editorial" name="editorial" />
+          </div>
+        </div>
+
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="editar-tipo">Tipo:</label>
+            <select id="editar-tipo" name="tipo">
+              <option value="libro">Libro</option>
+              <option value="revista">Revista</option>
+              <option value="referencia">Referencia</option>
+            </select>
+          </div>
+          <div class="grupo-formulario">
+            <label for="editar-isbn">ISBN:</label>
+            <input type="text" id="editar-isbn" name="isbn" />
+          </div>
+        </div>
+
+        <div class="fila-formulario">
+          <div class="grupo-formulario">
+            <label for="editar-año-publicacion">Año de Publicación:</label>
+            <input type="date" id="editar-año-publicacion" name="anno_publicacion" />
+          </div>
+          <div class="grupo-formulario">
+            <label for="editar-disponibilidad">Disponibilidad:</label>
+            <input type="checkbox" id="editar-disponibilidad" name="disponibilidad" />
+          </div>
+        </div>
+
+        <div class="fila-formulario">
+          <button type="submit">Guardar Cambios</button>
+          <button type="button" onclick="ocultarFormularioEdicion()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    {% comment %} Script para manejar la selección de libros y la edición {% endcomment %}
+    <script src="{% static 'VL_app/adminBook.js' %}"></script>
+  </body>
+</html>

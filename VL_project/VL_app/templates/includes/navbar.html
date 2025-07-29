@@ -1,0 +1,79 @@
+{% load static %}
+{% load grupos_tags %}
+
+<link rel="stylesheet" href="{% static 'VL_app/upper_menus.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+
+<div class="navbar--section">
+  <div class="navbar">
+    {% if user.is_authenticated %}
+      {% if user|has_group:'Bibliotecologo' %}
+        <!-- Menú para bibliotecólogos -->
+        <details class="nav-menu">
+          <summary></summary>
+          <nav class="menu menubibliotecologo">
+            <a href="/">Inicio</a>
+            <a href="/tour_virtual">Tour Virtual</a>
+            <a href="/catalogo">Catalogo</a>
+            <a href="/adminBook">Libros</a>
+            <a href="/prestamos/">Prestamos</a>
+            <a href="/adminUsers">Gestion</a>
+          </nav>
+        </details>
+      {% elif user|has_group:'Bibliotecario' %}
+        <!-- Menú para Bibliotecarios -->
+        <details class="nav-menu">
+          <summary></summary>
+          <nav class="menu">
+            <a href="/">Inicio</a>
+            <a href="/tour_virtual">Tour Virtual</a>
+            <a href="/catalogo">Catalogo</a>
+            <a href="/adminBook">Libros</a>
+            <a href="/prestamos">Prestamos</a>
+          </nav>
+        </details>
+      {% else %}
+        <!-- Menú para usuarios autenticados que no son bibliotecólogos -->
+        <details class="nav-menu">
+          <summary></summary>
+          <nav class="menu">
+            <a href="/">Inicio</a>
+            <a href="/tour_virtual">Tour Virtual</a>
+            <a href="/catalogo">Catalogo</a>
+          </nav>
+        </details>
+      {% endif %}
+    {% else %}
+      <!-- Menú para usuarios no autenticados -->
+      <details class="nav-menu">
+        <summary></summary>
+        <nav class="menu">
+          <a href="/">Inicio</a>
+          <a href="/tour_virtual">Tour Virtual</a>
+          <a href="/catalogo">Catalogo</a>
+          <a href="/prestamo_salas">prestamo de salas</a>
+        </nav>
+      </details>
+    {% endif %}
+
+    <div class="contenedor-botones">
+      {% if user.is_authenticated %}
+        <!-- Ícono de usuario con menú desplegable -->
+        <details class="user-menu">
+          <summary class="user-icon">
+            <i class="fas fa-user-circle"></i>
+          </summary>
+          <nav class="dropdown-menu">
+            <span class="username">{{ user.username }}</span>
+            <a href="/perfil">Perfil</a>
+            <a href="logout">Cerrar sesión</a>
+          </nav>
+        </details>
+      {% else %}
+        <a href="login" class="boton-acceso">Iniciar sesión</a>
+        <a href="register" class="boton-acceso">Registrar</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+{% load static %}
+{% load grupos_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Biblioteca Dr. Júlian Padrón</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'VL_app/upper_menus.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  </head>
+
+  <body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+      <section class="explore--education--category m-5">
+        <h2>Educación</h2>
+        <div class="container">
+          <div class="row">
+            {% for book in edu_books %}
+              <div class="col-lg-4 m-3">
+                <div class="card" style="height: 350px;">
+                  <div class="card-body">
+                    <h5 class="card-title text-center mb-3">{{ book.titulo }}</h5>
+                    <p class="card-text">Descripción : {{ book.sinopsis|truncatechars:100 }}</p>
+                    <p class="card-text">Paginas : {{ book.paginas }}</p>
+                    <p class="card-text">Categoría : {{ book.categoria }}</p>
+                    <p class="card-text">Autor : {{ book.autor }}</p>
+                    <a href="{% url 'viewBook' book.id %}" class="btn btn-primary">Detalles</a>
+                    <a href="{{ book.pdf.url }}" class="btn btn-primary">Ver Libro</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="explore--education--category m-5">
+        <h2>Ficción</h2>
+        <div class="container">
+          <div class="row">
+            {% for book in fiction_books %}
+              <div class="col-lg-4 m-3">
+                <div class="card" style="height: 350px;">
+                  <div class="card-body">
+                    <h5 class="card-title text-center mb-3">{{ book.titulo }}</h5>
+                    <p class="card-text">Descripción : {{ book.sinopsis|truncatechars:50 }}</p>
+                    <p class="card-text">Paginas : {{ book.paginas }}</p>
+                    <p class="card-text">Categoría : {{ book.categoria }}</p>
+                    <p class="card-text">Autor : {{ book.autor }}</p>
+
+                    <a href="{{ book.pdf.url }}" class="btn btn-primary">Ver Libro</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="explore--education--category m-5">
+        <h2>Ciencia</h2>
+        <div class="container">
+          <div class="row">
+            {% for book in science_books %}
+              <div class="col-lg-4 m-3">
+                <div class="card" style="height: 350px;">
+                  <div class="card-body">
+                    <h5 class="card-title text-center mb-3">{{ book.titulo }}</h5>
+                    <p class="card-text">Descripción : {{ book.sinopsis|truncatechars:100 }}</p>
+                    <p class="card-text">Paginas : {{ book.paginas }}</p>
+                    <p class="card-text">Categoría : {{ book.categoria }}</p>
+                    <p class="card-text">Autor : {{ book.autor }}</p>
+
+                    <a href="{{ book.pdf.url }}" class="btn btn-primary">Ver Libro</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </div>
+	
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+  </body>
+</html>

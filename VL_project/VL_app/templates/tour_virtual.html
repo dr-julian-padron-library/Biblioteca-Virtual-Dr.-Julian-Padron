@@ -1,0 +1,215 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tour Virtual - Biblioteca Dr. Júlian Padrón</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}">
+    <link rel="stylesheet" href="{% static 'VL_app/tour_virtual.css' %}">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+        <!-- Cuadro de bienvenida -->
+        <div id="welcome-box" class="welcome-box">
+            <h1>Bienvenido al Tour Virtual</h1>
+            <p>Comienza el tour para explorar la Biblioteca Dr. Júlian Padrón.</p>
+            <button id="start-tour-btn" class="start-tour-btn">Iniciar</button>
+        </div>
+
+        <!-- Contenedor del tour virtual -->
+        <div id="tour-container" class="tour-container" style="display: none;">
+            <!-- Botones de movimiento (arriba, abajo, izquierda, derecha) -->
+            <div id="movement-buttons" class="movement-buttons">
+                <button id="up-btn" class="nav-btn up-btn">&#9650;</button>
+                <div>
+                    <button id="left-btn" class="nav-btn left-btn">&#9668;</button>
+                    <button id="down-btn" class="nav-btn down-btn">&#9660;</button>
+                    <button id="right-btn" class="nav-btn right-btn">&#9658;</button>
+                </div>
+            </div>
+            <!-- Botón para regresar al inicio -->
+            <button id="restart-btn" class="restart-btn">Regresar al inicio</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    <!-- Script para manejar el tour virtual -->
+    <script>
+        // Array con las rutas de las imágenes del tour
+        const tourvirtual = {
+            "1_puerta_cerrada": {
+                image: "{% static 'tour_virtual/imagen_1.jpg' %}",
+                connections: { up: "2_puerta_abierta" }
+            },
+            "2_puerta_abierta": {
+                image: "{% static 'tour_virtual/imagen_2.jpg' %}",
+                connections: { up: "3_adentro_de_la_biblioteca" }
+            },
+            "3_adentro_de_la_biblioteca": {
+                image: "{% static 'tour_virtual/imagen_3.jpg' %}",
+                connections: { left: "4_camino_izquierda", up: "6_camino_arriba", right: "5_camino_derecha" }
+            },
+            "4_camino_izquierda": {
+                image: "{% static 'tour_virtual/imagen_4.jpg' %}",
+                connections: { right: "4.1_camino_derecha", up: "4.2_camino_arriba", left: "4.3_camino_izquierda" }
+            },
+            "4.1_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_4.1.jpg' %}",
+                connections: {}
+            },
+            "4.2_camino_arriba": {
+                image: "{% static 'tour_virtual/imagen_4.2.jpg' %}",
+                connections: {}
+            },
+            "4.3_camino_izquierda": {
+                image: "{% static 'tour_virtual/imagen_4.3.jpg' %}",
+                connections: {}
+            },
+            "5_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_5.jpg' %}",
+                connections: { up: "5.2_camino_arriba", right: "5.3_camino_derecha" } // Eliminada la conexión a 5.1
+            },
+            "5.2_camino_arriba": {
+                image: "{% static 'tour_virtual/imagen_5.2.jpg' %}",
+                connections: { left: "5.2.1_camino_izquierda", up: "5.2.2_camino_arriba", right: "5.2.3_camino_derecha" }
+            },
+            "5.2.1_camino_izquierda": {
+                image: "{% static 'tour_virtual/imagen_5.2.1.jpg' %}",
+                connections: {}
+            },
+            "5.2.2_camino_arriba": {
+                image: "{% static 'tour_virtual/imagen_5.2.2.jpg' %}",
+                connections: {}
+            },
+            "5.2.3_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_5.2.3.jpg' %}",
+                connections: {}
+            },
+            "5.3_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_5.3.jpg' %}",
+                connections: {}
+            },
+            "6_camino_arriba": {
+                image: "{% static 'tour_virtual/imagen_6.jpg' %}",
+                connections: { left: "6.1_camino_izquierda", right: "6.2_camino_derecha" }
+            },
+            "6.1_camino_izquierda": {
+                image: "{% static 'tour_virtual/imagen_6.1.jpg' %}",
+                connections: { right: "6.1.1_camino_derecha" } // Eliminadas las rutas 6.1.2 y 6.1.3
+            },
+            "6.1.1_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_6.1.1.jpg' %}",
+                connections: {}
+            },
+            "6.2_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_6.2.jpg' %}",
+                connections: { left: "6.2.1_camino_izquierda", up: "6.2.2_camino_arriba", right: "6.2.3_camino_derecha" }
+            },
+            "6.2.1_camino_izquierda": {
+                image: "{% static 'tour_virtual/imagen_6.2.1.jpg' %}",
+                connections: {}
+            },
+            "6.2.2_camino_arriba": {
+                image: "{% static 'tour_virtual/imagen_6.2.2.jpg' %}",
+                connections: {}
+            },
+            "6.2.3_camino_derecha": {
+                image: "{% static 'tour_virtual/imagen_6.2.3.jpg' %}",
+                connections: {}
+            }
+        };
+    
+        let currentImageKey = "1_puerta_cerrada"; // Imagen inicial
+        let navigationHistory = []; // Historial de navegación
+    
+        // Obtener elementos del DOM
+        const welcomeBox = document.getElementById('welcome-box');
+        const tourContainer = document.getElementById('tour-container');
+        const startTourBtn = document.getElementById('start-tour-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const upBtn = document.getElementById('up-btn');
+        const downBtn = document.getElementById('down-btn');
+        const leftBtn = document.getElementById('left-btn');
+        const rightBtn = document.getElementById('right-btn');
+    
+        // Mostrar el tour y ocultar el cuadro de bienvenida
+        startTourBtn.addEventListener('click', () => {
+            welcomeBox.style.display = 'none';
+            tourContainer.style.display = 'block';
+            navigationHistory = []; // Reiniciar el historial
+            loadImage(currentImageKey); // Cargar la primera imagen
+        });
+    
+        // Regresar al inicio del tour
+        restartBtn.addEventListener('click', () => {
+            welcomeBox.style.display = 'block';
+            tourContainer.style.display = 'none';
+            currentImageKey = "1_puerta_cerrada"; // Reiniciar a la primera imagen
+            navigationHistory = []; // Reiniciar el historial
+            loadImage(currentImageKey); // Cargar la primera imagen
+        });
+    
+        // Función para cargar una imagen como fondo
+        function loadImage(imageKey) {
+            const imageUrl = tourvirtual[imageKey].image;
+            tourContainer.style.backgroundImage = `url('${imageUrl}')`;
+            tourContainer.style.backgroundSize = 'cover'; // Ajusta la imagen al tamaño del contenedor
+            tourContainer.style.backgroundPosition = 'center'; // Centra la imagen
+            updateNavigationButtons(imageKey); // Actualizar los botones de navegación
+        }
+    
+        // Función para actualizar los botones de navegación
+        function updateNavigationButtons(imageKey) {
+            const connections = tourvirtual[imageKey].connections;
+            upBtn.style.display = connections.up ? "block" : "none";
+            downBtn.style.display = navigationHistory.length > 0 ? "block" : "none"; // Siempre mostrar si hay historial
+            leftBtn.style.display = connections.left ? "block" : "none";
+            rightBtn.style.display = connections.right ? "block" : "none";
+        }
+    
+        // Navegar según las flechas
+        upBtn.addEventListener('click', () => {
+            const nextImageKey = tourvirtual[currentImageKey].connections.up;
+            if (nextImageKey) {
+                navigationHistory.push(currentImageKey); // Guardar la imagen actual en el historial
+                currentImageKey = nextImageKey;
+                loadImage(currentImageKey);
+            }
+        });
+    
+        downBtn.addEventListener('click', () => {
+            if (navigationHistory.length > 0) {
+                const previousImageKey = navigationHistory.pop(); // Obtener la imagen anterior del historial
+                currentImageKey = previousImageKey;
+                loadImage(currentImageKey);
+            }
+        });
+    
+        leftBtn.addEventListener('click', () => {
+            const nextImageKey = tourvirtual[currentImageKey].connections.left;
+            if (nextImageKey) {
+                navigationHistory.push(currentImageKey); // Guardar la imagen actual en el historial
+                currentImageKey = nextImageKey;
+                loadImage(currentImageKey);
+            }
+        });
+    
+        rightBtn.addEventListener('click', () => {
+            const nextImageKey = tourvirtual[currentImageKey].connections.right;
+            if (nextImageKey) {
+                navigationHistory.push(currentImageKey); // Guardar la imagen actual en el historial
+                currentImageKey = nextImageKey;
+                loadImage(currentImageKey);
+            }
+        });
+    </script>
+</body>
+</html>

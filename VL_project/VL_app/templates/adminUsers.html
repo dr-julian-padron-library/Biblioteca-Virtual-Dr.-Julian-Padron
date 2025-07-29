@@ -1,0 +1,147 @@
+{% load static %}
+{% load grupos_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Administración de Usuarios y Empleados</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'VL_app/admin_elements.css' %}" />
+  </head>
+
+  <body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+      <h1 id="title-admin-users">Administración de Usuarios y Empleados</h1>
+
+      <!-- Botones para seleccionar entre usuarios y empleados -->
+      <div class="selector-admin">
+        <button id="btn-usuarios" class="boton-seleccion activo">Usuarios</button>
+        <button id="btn-empleados" class="boton-seleccion">Empleados</button>
+        <button class="boton-añadir-usuario" onclick="mostrarFormularioAñadirUsuario()" title="Añadir Usuario"><i class="fas fa-plus"></i>  Añadir Usuario</button>
+      </div>
+
+      <!-- Sección de usuarios -->
+      <div id="seccion-usuarios" class="seccion-admin">
+        <h2 id="title-usuarios">Usuarios</h2>
+        <div class="contenedor-tabla-boton">
+          <table class="tabla-usuarios">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Último Inicio de Sesión</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usuario in usuarios %}
+                <tr>
+                  <td>{{ usuario.first_name }}</td>
+                  <td>{{ usuario.last_name }}</td>
+                  <td>{{ usuario.email }}</td>
+                  <td>{{ usuario.last_login }}</td>
+                  <td>
+                    <button class="boton-editar" onclick="mostrarFormularioEdicion('{{ usuario.id }}')" title="Editar"><i class="fas fa-edit"></i></button>
+                    <form method="POST" style="display: inline;">
+                      {% csrf_token %}
+                      <input type="hidden" name="user_id" value="{{ usuario.id }}" />
+                      <button type="submit" name="eliminar" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sección de empleados -->
+      <div id="seccion-empleados" class="seccion-admin" style="display: none;">
+        <h2>Empleados</h2>
+        <table class="tabla-empleados">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Correo</th>
+              <th>Último Inicio de Sesión</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for empleado in empleados %}
+              <tr>
+                <td>{{ empleado.first_name }}</td>
+                <td>{{ empleado.last_name }}</td>
+                <td>{{ empleado.email }}</td>
+                <td>{{ empleado.last_login }}</td>
+                <td>
+                  <button class="boton-editar" onclick="mostrarFormularioEdicion('{{ empleado.id }}')" title="Editar">
+                    <i class="fas fa-edit"></i>
+                    <span class="tooltip-text"></span>
+                  </button>
+                  <form method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ empleado.id }}" />
+                    <button type="submit" name="eliminar" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Formulario de edición (oculto inicialmente) -->
+    <div id="formulario-edicion" class="formulario-edicion" style="display: none;">
+      <h2>Editar Usuario/Empleado</h2>
+      <form method="POST" action="/editUsers/">
+        {% csrf_token %}
+        <input type="hidden" id="editar-id" name="id" />
+        <label for="editar-nombre">Nombre:</label>
+        <input type="text" id="editar-nombre" name="nombre" required />
+        <label for="editar-apellido">Apellido:</label>
+        <input type="text" id="editar-apellido" name="apellido" required />
+        <label for="editar-correo">Correo:</label>
+        <input type="email" id="editar-correo" name="correo" required />
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" onclick="ocultarFormularioEdicion()">Cancelar</button>
+      </form>
+    </div>
+
+    <!-- Formulario de añadir usuario (oculto inicialmente) -->
+    <div id="formulario-añadir-usuario" class="formulario-edicion" style="display: none;">
+      <h2>Añadir Usuario</h2>
+      <form method="POST" action="/addUsers/">
+        {% csrf_token %}
+        <label for="añadir-nombre">Nombre:</label>
+        <input type="text" id="añadir-nombre" name="nombre" required />
+        <label for="añadir-apellido">Apellido:</label>
+        <input type="text" id="añadir-apellido" name="apellido" required />
+        <label for="añadir-correo">Correo:</label>
+        <input type="email" id="añadir-correo" name="correo" required />
+        <label for="añadir-tipo">Tipo de Usuario:</label>
+        <select id="añadir-tipo" name="tipo" required>
+          <option value="Usuario">Usuario</option>
+          <option value="Bibliotecario">Bibliotecario</option>
+        </select>
+        <button type="submit">Guardar</button>
+        <button type="button" onclick="ocultarFormularioAñadirUsuario()">Cancelar</button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    {% comment %} Script para manejar la selección de usuarios/empleados y la edición {% endcomment %}
+    <script src="{% static 'VL_app/adminUsers.js' %}"></script>
+  </body>
+</html>

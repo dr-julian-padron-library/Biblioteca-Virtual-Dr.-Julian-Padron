@@ -1,0 +1,68 @@
+/* Footer */
+.footer--section {
+    background-color: #5a5a5a;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+    color: #D3D3D3;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    padding: 20px 0; /* Añadido para dar un poco de espacio interno al footer */
+}
+
+.footer--section a {
+    font-size: 24px;
+    padding: 5px;
+    color: #D3D3D3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    position: relative; /* Necesario para el borde redondeado */
+    display: inline-block; /* Para que el borde no ocupe toda la línea */
+}
+
+.footer--section a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px; /* Ajusta la posición del borde */
+    width: 100%;
+    height: 10px; /* Grosor del borde */
+    background-color: rgb(155, 155, 155);
+    border-radius: 5px; /* Borde redondeado */
+    color: #afafaf;
+    transition: background-color 0.3s ease; /* Transición suave para el color del borde */
+}
+
+.footer--section a:hover::after {
+    color: #ffffff; /* Cambia el color del borde al pasar el cursor */
+}
+
+.footer--section a:hover {
+    color: #ffffff;
+}
+
+.footer--items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Reducido el espacio entre elementos */
+}
+
+.footer--details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Reducido el espacio entre elementos */
+}
+
+.footer--about {
+    font-size: 0.9em;
+    margin: 5px 0; /* Reducido el margen */
+}
+
+.footer--rights {
+    font-size: 0.9em;
+    margin: 5px 0; /* Reducido el margen */
+}

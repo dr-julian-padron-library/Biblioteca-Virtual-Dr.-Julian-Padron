@@ -1,0 +1,115 @@
+{% load static %}
+{% load grupos_tags %}
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perfil - Biblioteca Dr. Júlian Padrón</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+  </head>
+  <body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+      <form method="POST" action="{% url 'perfil' %}" class="register--form">
+        {% csrf_token %}
+        <div class="form-title">Perfil de Usuario</div>
+
+        <!-- Nombre de Usuario -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="username">Nombre de Usuario</label>
+          <input type="text" id="username" class="form-control" name="username" value="{{ user.username }}" readonly />
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="email">Correo Electrónico</label>
+          <input type="email" id="email" class="form-control" name="email" value="{{ user.email }}" readonly />
+        </div>
+
+        <!-- Nombre -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="first_name">Nombre</label>
+          <input type="text" id="first_name" class="form-control" name="first_name" value="{{ user.first_name }}" readonly />
+        </div>
+
+        <!-- Apellido -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="last_name">Apellido</label>
+          <input type="text" id="last_name" class="form-control" name="last_name" value="{{ user.last_name }}" readonly />
+        </div>
+
+        <!-- Botón para habilitar edición -->
+        <button type="button" id="editar-perfil" class="btn btn-primary btn-block mb-4">Editar Perfil</button>
+
+        <!-- Campos de edición (ocultos inicialmente) -->
+        <div id="campos-edicion" style="display: none;">
+          <!-- Contraseña actual -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="current_password">Contraseña Actual</label>
+            <input type="password" id="current_password" class="form-control" name="current_password" />
+          </div>
+
+          <!-- Nueva Contraseña -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="new_password">Nueva Contraseña</label>
+            <input type="password" id="new_password" class="form-control" name="new_password" />
+          </div>
+
+          <!-- Repetir Nueva Contraseña -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="confirm_password">Repetir Nueva Contraseña</label>
+            <input type="password" id="confirm_password" class="form-control" name="confirm_password" />
+          </div>
+
+          <!-- Botón para guardar cambios -->
+          <button type="submit" class="btn btn-primary btn-block mb-4">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    <!-- Script para habilitar la edición -->
+    <script>
+      document.getElementById('editar-perfil').addEventListener('click', function () {
+        // Habilitar la edición de los campos
+        document.getElementById('email').readOnly = false
+        document.getElementById('first_name').readOnly = false
+        document.getElementById('last_name').readOnly = false
+      
+        // Mostrar los campos de contraseña
+        document.getElementById('campos-edicion').style.display = 'block'
+      
+        // Cambiar el texto del botón
+        this.textContent = 'Cancelar Edición'
+        this.classList.remove('btn-primary')
+        this.classList.add('btn-secondary') // Cambiar a un estilo secundario
+      
+        // Cambiar el comportamiento del botón para cancelar la edición
+        this.onclick = function () {
+          // Restaurar los campos a su estado original
+          document.getElementById('email').readOnly = true
+          document.getElementById('first_name').readOnly = true
+          document.getElementById('last_name').readOnly = true
+      
+          // Ocultar los campos de contraseña
+          document.getElementById('campos-edicion').style.display = 'none'
+      
+          // Restaurar el texto y el estilo del botón
+          this.textContent = 'Editar Perfil'
+          this.classList.remove('btn-secondary') // Quitar el estilo secundario
+          this.classList.add('btn-primary') // Volver al estilo primario
+      
+          // Restaurar el comportamiento original del botón
+          this.onclick = arguments.callee
+        }
+      })
+    </script>
+  </body>
+</html>

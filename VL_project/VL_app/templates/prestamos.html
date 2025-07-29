@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Préstamos</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'VL_app/admin_elements.css' %}" />
+</head>
+<body>
+    <!-- Barra de navegación -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+        <h1 id="title-admin-users">Administración de Préstamos</h1>
+
+        <!-- Botón para añadir préstamo -->
+        <div class="selector-admin">
+            <button class="boton-añadir-prestamo" onclick="mostrarFormularioAñadirPrestamo()" title="Añadir Préstamo">
+                <i class="fas fa-plus"></i> Añadir Préstamo
+            </button>
+        </div>
+
+        <!-- Tabla de préstamos -->
+        <div class="seccion-prestamos">
+            <table class="tabla-usuarios">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Bibliotecario</th>
+                        <th>Solicitante</th>
+                        <th>Libro</th>
+                        <th>Fecha de Préstamo</th>
+                        <th>Fecha de Devolución</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prestamo in prestamos %}
+                    <tr>
+                        <td>{{ prestamo.id }}</td>
+                        <td>{{ prestamo.bibliotecario.email }}</td>
+                        <td>{{ prestamo.solicitante.email }}</td>
+                        {% comment %} {% for libro in prestamo.libros %%} {% endcomment %}
+                        <td>{{ libro }}</td>
+                        {% comment %} {% endfor %} {% endcomment %}
+                        <td>{{ prestamo.fecha_prestamo }}</td>
+                        <td>{{ prestamo.fecha_devolucion }}</td>
+                        <td>{{ prestamo.estado }}</td>
+                        <td>
+                            <button class="boton-editar" onclick="mostrarFormularioEdicionPrestamo('{{ prestamo.id }}')" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="prestamo_id" value="{{ prestamo.id }}" />
+                                <button type="submit" name="eliminar" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Formulario de añadir préstamo (oculto inicialmente) -->
+    <div id="formulario-añadir-prestamo" class="formulario-edicion" style="display: none;">
+        <h2>Añadir Préstamo</h2>
+        <form method="POST" action="/addPrestamo/">
+            {% csrf_token %}
+            <label for="añadir-solicitante">Solicitante (Correo):</label>
+            <input type="email" id="añadir-solicitante" name="solicitante" required />
+            
+            <label for="añadir-libros">Libros (ISBN):</label>
+            <select id="añadir-libros" name="libros" multiple required>
+                {% for libro in libros %}
+                    <option value="{{ libro.isbn }}">{{ libro.titulo }} ({{ libro.isbn }})</option>
+                {% endfor %}
+            </select>
+            
+            <label for="añadir-fecha-devolucion">Fecha de Devolución:</label>
+            <input type="date" id="añadir-fecha-devolucion" name="fecha_devolucion" required />
+            
+            <label for="añadir-estado">Estado:</label>
+            <select id="añadir-estado" name="estado" required>
+                <option value="solicitado">Solicitado</option>
+                <option value="retirado">Retirado</option>
+                <option value="devuelto">Devuelto</option>
+                <option value="atrasado">Atrasado</option>
+                <option value="no_entregado">No entregado</option>
+            </select>
+            
+            <button type="submit">Guardar</button>
+            <button type="button" onclick="ocultarFormularioAñadirPrestamo()">Cancelar</button>
+        </form>
+    </div>
+
+    <!-- Formulario de edición de préstamo (oculto inicialmente) -->
+    <div id="formulario-edicion-prestamo" class="formulario-edicion" style="display: none;">
+        <h2>Editar Préstamo</h2>
+        <form method="POST" action="/editPrestamo/">
+            {% csrf_token %}
+            <input type="hidden" id="editar-id-prestamo" name="id" />
+            
+            <label for="editar-libros">Libros (ISBN):</label>
+            <select id="editar-libros" name="libros" multiple required>
+                {% for libro in libros %}
+                    <option value="{{ libro.isbn }}">{{ libro.titulo }} ({{ libro.isbn }})</option>
+                {% endfor %}
+            </select>
+            
+            <label for="editar-fecha-devolucion">Fecha de Devolución:</label>
+            <input type="date" id="editar-fecha-devolucion" name="fecha_devolucion" required />
+            
+            <label for="editar-estado">Estado:</label>
+            <select id="editar-estado" name="estado" required>
+                <option value="solicitado">Solicitado</option>
+                <option value="retirado">Retirado</option>
+                <option value="devuelto">Devuelto</option>
+                <option value="atrasado">Atrasado</option>
+                <option value="no_entregado">No entregado</option>
+            </select>
+            
+            <button type="submit">Guardar Cambios</button>
+            <button type="button" onclick="ocultarFormularioEdicionPrestamo()">Cancelar</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    {% comment %} Script para manejar la edición y añadir préstamos {% endcomment %}
+    <script src="{% static 'VL_app/prestamos.js' %}"></script>
+</body>
+</html>

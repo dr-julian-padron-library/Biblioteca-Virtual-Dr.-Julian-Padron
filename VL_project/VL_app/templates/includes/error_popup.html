@@ -1,0 +1,21 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'VL_app/error_popup.css' %}" />
+<script src="{% static 'VL_app/error_popup.js' %}"></script>
+
+
+{% if messages %}
+  <div id="mensaje-popup" class="formulario-edicion" style="display: block;">
+    <h2>Mensaje</h2>
+    <div class="mensajes-contenido">
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}
+            
+          
+          
+          alert-{{ message.tags }}
+          {% endif %}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    <button onclick="cerrarMensaje()" class="boton-cerrar">Cerrar</button>
+  </div>
+{% endif %}

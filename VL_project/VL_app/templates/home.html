@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Biblioteca Dr. Júlian Padrón</title>
+    <link rel="stylesheet" href="{% static 'VL_app/style.css' %}" />
+  </head>
+
+  <body>
+
+    {% include 'includes/navbar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+      <div class="img-container">
+        <img src="../jpgs/IMG_20241120_092231_729.jpg" alt="img" class="img" />
+        <div class="texto-bienvenida">
+          <h1>Bienvenido a la Biblioteca Dr. Júlian Padrón</h1>
+          <p>Donde cada libro es una puerta a nuevos mundos</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+  </body>
+</html>
