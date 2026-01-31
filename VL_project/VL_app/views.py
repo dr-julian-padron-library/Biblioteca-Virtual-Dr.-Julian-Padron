@@ -160,6 +160,11 @@ def explore(request):
         })
 
 
+def catalogo(request):
+    books = MaterialBibliografico.objects.all()
+    return render(request, 'catalogo.html', {'books': books})
+
+
 @login_required
 @user_passes_test(es_Empleado)
 def adminUsers(request):
